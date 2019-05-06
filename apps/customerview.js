@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -20,10 +21,44 @@ connection.connect(function(err) {
   listProducts();
 });
 
+//display all of the items available for sale in a table
 var listProducts = function() {
     console.log("List of All Products");
     connection.query("SELECT * FROM products", function(err,res){
         if (err) throw err;
         console.table(res);
+        startPurchase();
     })
+}
+
+//prompt the user with two messages
+//pick an ID of the product they want to buy
+//how many units of the product they want to buy
+
+var startPurchase = function() {
+   
+    inquirer.prompt([{
+        name: "buy-item",
+        type: "input",
+        message: "What is the ID of the Item you would like to purchase?",
+        validate: function(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          }
+    },
+    {
+        name: "buy-item",
+        type: "input",
+        message: "How many would you like to purchase?",
+        validate: function(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          }
+         
+    }
+])
 }
