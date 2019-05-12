@@ -40,8 +40,8 @@ var startPurchase = function (res) {
   inquirer.prompt([{
     type: "input",
     name: "choice",
-    message: "What is the ID of the Item you would like to purchase? [Quit with q]"
-    
+    message: "What is the ID of the Item you would like to purchase? [Quit with Q]"
+
   }]).then(function (answer) {
     var validProduct = false;
     if (answer.choice === "Q") {
@@ -51,7 +51,7 @@ var startPurchase = function (res) {
       if (res[i].item_id == answer.choice) {
         console.log(res[i].stock_total, res[i].product_name, " found!")
         validProduct = true;
-        var item = answer.choice; 
+        var item = answer.choice;
         // console.table(item[i]);
         var id = i;
         // console.table(id);
@@ -64,19 +64,24 @@ var startPurchase = function (res) {
           validate: function (value) {
             if (isNaN(value) == false) {
               return true;
-            }else{
-            return false;
-          }}
+            } else {
+              return false;
+            }
+          }
         })
           .then(function (answer) {
             if ((res[id].stock_total - answer.quantity) > 0) {
-              connection.query("UPDATE products SET stock_total = ?'", (res[id].stock_total - answer.quantity)+ " 'WHERE product_name = ?'" + item + "'", function (err, res2) {
-                console.log("Purchase made!");
-                console.log("Your total is ", res[id].price * answer.quantity);
-                
-               listProducts();
-                
-              })
+
+              // UpdateInventory();
+              connection.query("UPDATE products SET stock_total=  '",
+                (res[id].stock_total - answer.quantity) + " 'WHERE item_id=  '" + item + " ' ", function (err, res2) {
+                  console.log("Purchase made!");
+                  console.log(item);
+                  console.log("Your total is ", res[id].price * answer.quantity);
+
+                  listProducts();
+
+                })
             } else {
               console.log("Not a Valid Product.")
               listProducts();
@@ -84,13 +89,25 @@ var startPurchase = function (res) {
           })
 
       }
+
     }
-    // if (i == res.length && validProduct == false) {
-    //   console.log("Not a Valid Product");
-    //   startPurchase(res);
-    // }
   })
 }
+
+// function UpdateInventory(res, quantity) {
+//   //   console.log(item.productname, quantity)
+//   var sqlQuery = `UPDATE products
+//                   SET stock_total = stockquantity - ?
+//                   WHERE item_id = ?`
+//   connection.query(sqlQuery, [parseInt(quantity), res[i].product_name], function (err, res2) {
+//     //     console.log("Purchase made!");
+//     //     console.log(item);
+//     //     console.log("Your total is ", res[id].price * answer.quantity);
+
+//     listProducts();
+//   })
+// }
+
 
 
 
