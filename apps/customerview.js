@@ -69,21 +69,22 @@ var startPurchase = function (res) {
             }
           }
         })
-          .then(function (answer) {
+          .then(function (answer) { 
             if ((res[id].stock_total - answer.quantity) > 0) {
 
               // UpdateInventory();
-              connection.query("UPDATE products SET stock_total=  '",
-                (res[id].stock_total - answer.quantity) + " 'WHERE item_id=  '" + item + " ' ", function (err, res2) {
+              connection.query("UPDATE products SET stock_total= ? '",
+                res[id].stock_total - answer.quantity + " 'WHERE item_id=  ?'" + item + " ' ", function (err, res2) {
                   console.log("Purchase made!");
-                  console.log(item);
+                  
                   console.log("Your total is ", res[id].price * answer.quantity);
+                  console.log("Thanks for Shopping!")
 
                   listProducts();
 
                 })
             } else {
-              console.log("Not a Valid Product.")
+              console.log("Not enough in stock.")
               listProducts();
             }
           })
