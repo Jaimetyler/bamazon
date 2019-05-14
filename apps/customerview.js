@@ -70,11 +70,11 @@ var startPurchase = function (res) {
           }
         })
           .then(function (answer) { 
+            
             if ((res[id].stock_total - answer.quantity) > 0) {
-
               // UpdateInventory();
-              connection.query("UPDATE products SET stock_total= ? '",
-                res[id].stock_total - answer.quantity + " 'WHERE item_id=  ?'" + item + " ' ", function (err, res2) {
+              connection.query("UPDATE products SET stock_total=  '"+
+                (res[id].stock_total - answer.quantity) + " 'WHERE item_id=  '" + item + " ' ", function (res2) {
                   console.log("Purchase made!");
                   
                   console.log("Your total is ", res[id].price * answer.quantity);
